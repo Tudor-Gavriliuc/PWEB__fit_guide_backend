@@ -9,12 +9,27 @@ use Illuminate\Support\Facades\URL;
 
 class BackExerciseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $exercises = DB::table('exercises')
-            ->where('type', 1)
+        $page = (int) $request->query('page', 1);
+        $pageSize = (int) $request->query('page_size', 6);
+
+        $query = DB::table('exercises')
+            ->where('type', 1);
+
+        $total = $query->count();
+
+        $exercises = $query
+            ->offset(($page - 1) * $pageSize)
+            ->limit($pageSize)
             ->get();
-        return response()->json($exercises);
+
+        return response()->json([
+            'total' => $total,
+            'page' => $page,
+            'page_size' => $pageSize,
+            'results' => $exercises,
+        ]);
     }
 
     public function add_back_exercise(Request $request)
