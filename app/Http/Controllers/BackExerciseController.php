@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
+
 class BackExerciseController extends Controller
 {
     public function index()
@@ -41,6 +42,26 @@ class BackExerciseController extends Controller
 
         return response()->json(['message' => 'Exercise added successfully']);
     }
+
+    public function update_exercise(Request $request)
+{
+    $validated = $request->validate([
+        'id' => 'required|integer|exists:exercises,id',
+        'name' => 'sometimes|string|max:255'
+    ]);
+
+    $dataToUpdate = [];
+
+    if ($request->has('name')) {
+        $dataToUpdate['name'] = $validated['name'];
+    }
+
+    if (!empty($dataToUpdate)) {
+        DB::table('exercises')->where('id', $validated['id'])->update($dataToUpdate);
+    }
+
+    return response()->json(['message' => 'Exercise updated successfully']);
+}
 
     public function delete($id)
     {

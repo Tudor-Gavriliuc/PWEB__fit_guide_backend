@@ -6,6 +6,8 @@ use App\Http\Controllers\BackExerciseController;
 
 Route::post('/add_back_exercise', [BackExerciseController::class, 'add_back_exercise']);
 
+Route::post('/update_exercise', [BackExerciseController::class, 'update_exercise']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
